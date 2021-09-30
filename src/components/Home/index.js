@@ -5,7 +5,6 @@ import { Button, TextField } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useHistory } from "react-router";
 
 function Home() {
   const [user, setUser] = useState({});
@@ -25,8 +24,6 @@ function Home() {
         // console.log(user);
       });
   });
-
-  const history = useHistory();
 
   const formSchema = yup.object().shape({
     title: yup.string().required("campo obrigatório"),
@@ -56,7 +53,9 @@ function Home() {
 
   const handleDelete = (data) => {
     axios
-      .delete(`https://kenziehub.herokuapp.com/users/techs/${data}`)
+      .delete(`https://kenziehub.herokuapp.com/users/techs/${data}`, {
+        headers: { Authorization: `Bearer: ${token}` },
+      })
       .then((response) => {
         console.log(response);
       })
@@ -116,6 +115,7 @@ function Home() {
                   <td>{tech.status}</td>
                   <td>
                     <Button
+                      onClick={() => handleDelete(tech.id)}
                       type="submit"
                       size="small"
                       variant="contained"
